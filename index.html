@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjun Srikanth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --electric-blue: #0066FF;
+            --electric-blue-glow: rgba(0, 102, 255, 0.3);
+            --dark: #0a0a0a;
+            --light: #f5f5f0;
+            --grey: #888;
+            --grey-dark: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--electric-blue);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+        }
+
+        .hero h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 400;
+            line-height: 0.95;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero h1 span {
+            display: block;
+        }
+
+        .hero h1 .first-name {
+            color: var(--electric-blue);
+            text-shadow: 0 0 60px var(--electric-blue-glow);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--grey);
+            max-width: 600px;
+            animation: fadeInUp 1s ease 0.2s forwards;
+            opacity: 0;
+            line-height: 1.7;
+        }
+
+        .tagline strong {
+            color: var(--light);
+            font-weight: 400;
+        }
+
+        .location {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--grey);
+            animation: fadeInUp 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .location::before {
+            content: '◉';
+            color: var(--electric-blue);
+            margin-right: 0.5rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 4rem;
+            left: 4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--grey);
+            animation: fadeIn 1s ease 1s forwards;
+            opacity: 0;
+        }
+
+        .scroll-line {
+            width: 60px;
+            height: 1px;
+            background: var(--grey);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--electric-blue);
+            animation: scrollPulse 2s ease infinite;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 8rem 4rem;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.85rem;
+            color: var(--electric-blue);
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--grey-dark);
+        }
+
+        /* About Section */
+        .about {
+            background: linear-gradient(180deg, var(--dark) 0%, #0d0d0d 100%);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 6rem;
+            max-width: 1200px;
+        }
+
+        .about-text p {
+            font-size: 1.05rem;
+            color: var(--grey);
+            margin-bottom: 1.5rem;
+            line-height: 1.85;
+        }
+
+        .about-text p:first-of-type::first-letter {
+            font-family: 'Instrument Serif', serif;
+            font-size: 4rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 1rem;
+            color: var(--electric-blue);
+        }
+
+        .about-text em {
+            color: var(--light);
+            font-style: normal;
+        }
+
+        .about-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-top: 2rem;
+        }
+
+        .stat {
+            border-left: 2px solid var(--electric-blue);
+            padding-left: 2rem;
+        }
+
+        .stat-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--light);
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--grey);
+            margin-top: 0.5rem;
+        }
+
+        /* Notes Section */
+        .notes {
+            background: #0d0d0d;
+        }
+
+        .notes-intro {
+            max-width: 650px;
+            margin-bottom: 4rem;
+            color: var(--grey);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .note-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--grey-dark);
+            padding: 2.5rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .note-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background: var(--electric-blue);
+            transition: height 0.4s ease;
+        }
+
+        .note-card:hover {
+            background: rgba(0, 102, 255, 0.05);
+            border-color: var(--electric-blue);
+            transform: translateY(-4px);
+        }
+
+        .note-card:hover::before {
+            height: 100%;
+        }
+
+        .note-date {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--grey);
+            margin-bottom: 1rem;
+        }
+
+        .note-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .note-card:hover .note-title {
+            color: var(--electric-blue);
+        }
+
+        .note-excerpt {
+            font-size: 0.9rem;
+            color: var(--grey);
+            line-height: 1.7;
+        }
+
+        .note-arrow {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            color: var(--electric-blue);
+        }
+
+        .note-card:hover .note-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Resume Section */
+        .resume {
+            background: var(--dark);
+        }
+
+        .resume-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1200px;
+        }
+
+        .resume-column h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--electric-blue);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--grey-dark);
+        }
+
+        .resume-item {
+            margin-bottom: 2.5rem;
+            padding-left: 1.5rem;
+            border-left: 1px solid var(--grey-dark);
+            transition: border-color 0.3s ease;
+        }
+
+        .resume-item:hover {
+            border-color: var(--electric-blue);
+        }
+
+        .resume-item h4 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-item .company {
+            color: var(--grey);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-item .date {
+            font-size: 0.8rem;
+            color: var(--electric-blue);
+        }
+
+        .skills-section {
+            margin-top: 3rem;
+        }
+
+        .skills-category {
+            margin-bottom: 2rem;
+        }
+
+        .skills-category-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--grey);
+            margin-bottom: 1rem;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .skill-tag {
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid var(--electric-blue);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: var(--electric-blue);
+        }
+
+        /* Contact Section */
+        .contact {
+            background: linear-gradient(180deg, #0d0d0d 0%, var(--dark) 100%);
+            text-align: center;
+        }
+
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+
+        .contact h2 span {
+            color: var(--electric-blue);
+            font-style: italic;
+        }
+
+        .contact-note {
+            color: var(--grey);
+            font-size: 0.95rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .contact-direct {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-email,
+        .contact-phone {
+            display: inline-block;
+            font-size: 1.1rem;
+            color: var(--light);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border: 1px solid var(--grey-dark);
+            transition: all 0.3s ease;
+        }
+
+        .contact-email:hover,
+        .contact-phone:hover {
+            border-color: var(--electric-blue);
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--electric-blue);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            padding: 1rem 2rem;
+            border: 1px solid var(--grey-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: var(--light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            border-color: var(--electric-blue);
+            color: var(--electric-blue);
+            transform: translateY(-4px);
+        }
+
+        .social-icon {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--grey-dark);
+            font-size: 0.8rem;
+            color: var(--grey);
+        }
+
+        .footer-quote {
+            font-style: italic;
+            color: var(--grey);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            nav {
+                padding: 1.5rem 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 4rem 2rem;
+            }
+
+            .hero {
+                padding: 0 2rem;
+            }
+
+            .about-content,
+            .resume-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scroll-indicator {
+                left: 2rem;
+                bottom: 2rem;
+            }
+
+            footer {
+                padding: 2rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .social-link {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">AS</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#notes">Notes</a></li>
+            <li><a href="#resume">Resume</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <span class="first-name">Arjun</span>
+                <span>Srikanth</span>
+            </h1>
+            <p class="tagline">
+                <strong>Doctor + mathematician.</strong> Building towards spatial healthcare tools (AR/VR + AI). Documenting the climb.
+            </p>
+            <p class="location">Perth, Western Australia</p>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="section-header">
+            <span class="section-number">01</span>
+            <h2 class="section-title">About</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <p>This is my corner of the internet — a lab notebook and a public trail of thinking. I believe reflection creates leverage, and leaving a record keeps me honest. If you're here, you're watching me build in real time.</p>
+                <p>I trained in two worlds: <em>mathematics</em> taught me to think in systems — discrete structures, operations research, the elegance of clean logic. <em>Medicine</em> taught me people — uncertainty, empathy, the mess of real life. The combination shaped how I approach everything.</p>
+                <p>Right now I'm a junior doctor in the WA public system, deliberately scaling back clinical hours to create space for building. The goal: healthcare technology that actually matters. Spatial computing. AI tools. Workflows that don't suck. I don't have it all figured out — I'm building the capacity to figure it out.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat">
+                    <div class="stat-number">10km/day</div>
+                    <div class="stat-label">Daily walk streak</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">BSc → MD → Builder</div>
+                    <div class="stat-label">The arc</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">3 pillars</div>
+                    <div class="stat-label">Medicine / Math / Making</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="notes" id="notes">
+        <div class="section-header">
+            <span class="section-number">02</span>
+            <h2 class="section-title">Notes</h2>
+            <div class="section-line"></div>
+        </div>
+        <p class="notes-intro">Reflections, frameworks, and lessons from the frontier. These are my unfiltered notes on building, learning, and figuring things out — process over mood, truth over vibes.</p>
+        <div class="notes-grid">
+            <article class="note-card">
+                <div class="note-date">January 2025</div>
+                <h3 class="note-title">The Downshift: Trading Hours for Leverage</h3>
+                <p class="note-excerpt">On the decision to scale back clinical work, create building time, and what I've learned about identity when your job isn't your whole story anymore.</p>
+                <div class="note-arrow">→</div>
+            </article>
+            <article class="note-card">
+                <div class="note-date">December 2024</div>
+                <h3 class="note-title">Discipline Without Drama</h3>
+                <p class="note-excerpt">The 10km walk streak, training routines, and why consistency beats intensity. Systems for showing up when motivation disappears.</p>
+                <div class="note-arrow">→</div>
+            </article>
+            <article class="note-card">
+                <div class="note-date">November 2024</div>
+                <h3 class="note-title">Reinforcement Learning for Humans</h3>
+                <p class="note-excerpt">Notes from studying Sutton & Barto. Making dense technical concepts digestible, and why RL matters for healthcare AI.</p>
+                <div class="note-arrow">→</div>
+            </article>
+            <article class="note-card">
+                <div class="note-date">October 2024</div>
+                <h3 class="note-title">Why Spatial Computing Will Hit Healthcare First</h3>
+                <p class="note-excerpt">AR/VR isn't gaming — it's legibility. Complex clinical information made actionable through spatial interfaces. The case for building here.</p>
+                <div class="note-arrow">→</div>
+            </article>
+            <article class="note-card">
+                <div class="note-date">September 2024</div>
+                <h3 class="note-title">Building a Personal Operating System</h3>
+                <p class="note-excerpt">Templates, trackers, structured routines. Obsessed with measurement and iteration. How I run my days and why it matters.</p>
+                <div class="note-arrow">→</div>
+            </article>
+            <article class="note-card">
+                <div class="note-date">August 2024</div>
+                <h3 class="note-title">Money as Oxygen (Not a God)</h3>
+                <p class="note-excerpt">A pragmatic take on wealth as leverage for freedom. Building towards financial independence without making it weird.</p>
+                <div class="note-arrow">→</div>
+            </article>
+            <article class="note-card">
+                <div class="note-date">July 2024</div>
+                <h3 class="note-title">Reassess This: Building a Chess Teaching Series</h3>
+                <p class="note-excerpt">Creating a structured YouTube series from Silman's book. Cinematic editing, clear teaching, and becoming an output machine.</p>
+                <div class="note-arrow">→</div>
+            </article>
+            <article class="note-card">
+                <div class="note-date">June 2024</div>
+                <h3 class="note-title">Things I Learned at 25</h3>
+                <p class="note-excerpt">A quarter century of lessons, mistakes, and small victories. What I wish I knew, and what I'm glad I didn't.</p>
+                <div class="note-arrow">→</div>
+            </article>
+            <article class="note-card">
+                <div class="note-date">May 2024</div>
+                <h3 class="note-title">Healthcare Workflows That Don't Suck</h3>
+                <p class="note-excerpt">Product thinking applied to clinical documentation. Templates, automations, and reducing friction in the system.</p>
+                <div class="note-arrow">→</div>
+            </article>
+        </div>
+    </section>
+
+    <section class="resume" id="resume">
+        <div class="section-header">
+            <span class="section-number">03</span>
+            <h2 class="section-title">Resume</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="resume-grid">
+            <div class="resume-column">
+                <h3>Experience</h3>
+                <div class="resume-item">
+                    <h4>GP Registrar</h4>
+                    <div class="company">General Practice Training</div>
+                    <div class="date">January 2026 — Ongoing</div>
+                </div>
+                <div class="resume-item">
+                    <h4>Junior Doctor</h4>
+                    <div class="company">WA Health Hospital System</div>
+                    <div class="date">January 2024 — December 2025</div>
+                </div>
+                <h3 style="margin-top: 3rem;">Projects</h3>
+                <div class="resume-item">
+                    <h4>Reassess This</h4>
+                    <div class="company">Chess teaching YouTube series</div>
+                    <div class="date">In development</div>
+                </div>
+                <div class="resume-item">
+                    <h4>Spatial Healthcare Tools</h4>
+                    <div class="company">AR/VR + AI exploration</div>
+                    <div class="date">Ongoing</div>
+                </div>
+            </div>
+            <div class="resume-column">
+                <h3>Education</h3>
+                <div class="resume-item">
+                    <h4>Doctor of Medicine (MD)</h4>
+                    <div class="company">University of Melbourne</div>
+                    <div class="date">February 2019 — November 2023</div>
+                </div>
+                <div class="resume-item">
+                    <h4>BSc — Discrete Mathematics & Operations Research</h4>
+                    <div class="company">University of Melbourne</div>
+                    <div class="date">February 2016 — November 2018</div>
+                </div>
+                <div class="skills-section">
+                    <h3>Skills</h3>
+                    <div class="skills-category">
+                        <div class="skills-category-title">Clinical</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">Emergency Medicine</span>
+                            <span class="skill-tag">Paediatrics</span>
+                            <span class="skill-tag">Psychiatry</span>
+                            <span class="skill-tag">Cardiology</span>
+                            <span class="skill-tag">General Medicine</span>
+                            <span class="skill-tag">General Surgery</span>
+                            <span class="skill-tag">Clinical Documentation</span>
+                            <span class="skill-tag">Hospital Workflow</span>
+                            <span class="skill-tag">Clinical Reasoning</span>
+                        </div>
+                    </div>
+                    <div class="skills-category">
+                        <div class="skills-category-title">Technical</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">SwiftUI (learning)</span>
+                            <span class="skill-tag">Systems Thinking</span>
+                            <span class="skill-tag">Data Literacy</span>
+                            <span class="skill-tag">RL Foundations</span>
+                            <span class="skill-tag">Intermediate Microeconomics</span>
+                            <span class="skill-tag">Corporate Finance</span>
+                            <span class="skill-tag">Financial Accounting</span>
+                        </div>
+                    </div>
+                    <div class="skills-category">
+                        <div class="skills-category-title">Creative</div>
+                        <div class="skills-list">
+                            <span class="skill-tag">Teaching</span>
+                            <span class="skill-tag">Script Writing</span>
+                            <span class="skill-tag">Long-form Projects</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="contact-content">
+            <h2>Let's <span>connect</span></h2>
+            <p class="contact-note">I'm always interested in conversations about healthcare technology, spatial computing, or just interesting problems. Reach out below.</p>
+            <div class="contact-direct">
+                <a href="mailto:arjunsrikanth100@gmail.com" class="contact-email">arjunsrikanth100@gmail.com</a>
+                <a href="tel:+61424251253" class="contact-phone">0424 251 253</a>
+            </div>
+            <div class="social-links">
+                <a href="https://au.linkedin.com/in/arjun-srikanth-302405239" target="_blank" class="social-link">
+                    <span class="social-icon">in</span>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://www.instagram.com/arj10009/" target="_blank" class="social-link">
+                    <span class="social-icon">ig</span>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://www.facebook.com/arj169/" target="_blank" class="social-link">
+                    <span class="social-icon">fb</span>
+                    <span>Facebook</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div>© 2025 Arjun Srikanth</div>
+        <div class="footer-quote">Process over mood. Truth over vibes.</div>
+    </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate sections on scroll
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(section);
+        });
+
+        // Make hero always visible
+        document.querySelector('.hero').style.opacity = '1';
+        document.querySelector('.hero').style.transform = 'translateY(0)';
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
